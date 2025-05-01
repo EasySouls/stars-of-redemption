@@ -78,7 +78,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>YAML_CPP_STATIC_DEFINE;WL_PLATFORM_WINDOWS;WL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>YAML_CPP_STATIC_DEFINE;IMGUI_DEFINE_MATH_OPERATORS;WL_PLATFORM_WINDOWS;WL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\StarsOfRedemption-Common\Source;..\Walnut\vendor\imgui;..\Walnut\vendor\glfw\include;..\Walnut\vendor\glm;..\Walnut\Walnut\Source;..\Walnut\Walnut\Platform\GUI;C:\VulkanSDK\1.4.309.0\Include;..\Walnut\vendor\spdlog\include;..\Walnut\vendor\yaml-cpp\include;..\Walnut\Walnut-Modules\Walnut-Networking\Source;..\Walnut\Walnut-Modules\Walnut-Networking\vendor\GameNetworkingSockets\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -101,7 +101,7 @@ IF EXIST "..\Walnut\Walnut-Modules\Walnut-Networking\vendor\GameNetworkingSocket
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>YAML_CPP_STATIC_DEFINE;WL_PLATFORM_WINDOWS;WL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>YAML_CPP_STATIC_DEFINE;IMGUI_DEFINE_MATH_OPERATORS;WL_PLATFORM_WINDOWS;WL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\StarsOfRedemption-Common\Source;..\Walnut\vendor\imgui;..\Walnut\vendor\glfw\include;..\Walnut\vendor\glm;..\Walnut\Walnut\Source;..\Walnut\Walnut\Platform\GUI;C:\VulkanSDK\1.4.309.0\Include;..\Walnut\vendor\spdlog\include;..\Walnut\vendor\yaml-cpp\include;..\Walnut\Walnut-Modules\Walnut-Networking\Source;..\Walnut\Walnut-Modules\Walnut-Networking\vendor\GameNetworkingSockets\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
@@ -130,7 +130,7 @@ IF EXIST "..\Walnut\Walnut-Modules\Walnut-Networking\vendor\GameNetworkingSocket
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>YAML_CPP_STATIC_DEFINE;WL_PLATFORM_WINDOWS;WL_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>YAML_CPP_STATIC_DEFINE;IMGUI_DEFINE_MATH_OPERATORS;WL_PLATFORM_WINDOWS;WL_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\StarsOfRedemption-Common\Source;..\Walnut\vendor\imgui;..\Walnut\vendor\glfw\include;..\Walnut\vendor\glm;..\Walnut\Walnut\Source;..\Walnut\Walnut\Platform\GUI;C:\VulkanSDK\1.4.309.0\Include;..\Walnut\vendor\spdlog\include;..\Walnut\vendor\yaml-cpp\include;..\Walnut\Walnut-Modules\Walnut-Networking\Source;..\Walnut\Walnut-Modules\Walnut-Networking\vendor\GameNetworkingSockets\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>None</DebugInformationFormat>
       <Optimization>Full</Optimization>
@@ -156,19 +156,27 @@ IF EXIST "..\Walnut\Walnut-Modules\Walnut-Networking\vendor\GameNetworkingSocket
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\ClientLayer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\ClientLayer.cpp">
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+    </ClCompile>
+    <ClCompile Include="src\StarsOfRedemptionApp.cpp">
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\StarsOfRedemption-Common\StarsOfRedemption-Common.vcxproj">
       <Project>{D48B095C-C0B0-58DC-E9FB-3D6CD57F57FA}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Walnut\vendor\yaml-cpp\yaml-cpp.vcxproj">
       <Project>{88F1A057-74BE-FB62-9DD7-E90A890331F1}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\ClientLayer.cpp" />
-    <ClCompile Include="src\StarsOfRedemptionApp.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\ClientLayer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

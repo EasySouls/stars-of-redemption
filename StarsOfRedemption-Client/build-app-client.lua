@@ -36,7 +36,8 @@ project "StarsOfRedemption-Client"
 
    	defines
 	{
-		"YAML_CPP_STATIC_DEFINE"
+		"YAML_CPP_STATIC_DEFINE",
+        "IMGUI_DEFINE_MATH_OPERATORS"
 	}
 
    targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
