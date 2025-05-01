@@ -1,7 +1,9 @@
 #include "ClientLayer.h"
 #include "Walnut/Input/Input.h"
+#include "Walnut/ImGui/ImGuiTheme.h"
 #include "imgui.h"
 #include "imgui_internal.h"
+#include "misc/cpp/imgui_stdlib.h"
 
 namespace StarsOfRedemption
 {
@@ -16,7 +18,9 @@ namespace StarsOfRedemption
 
 	void ClientLayer::OnAttach()
 	{
-
+		m_Client.SetDataReceivedCallback([this](const Walnut::Buffer buffer) { OnDataReceived(buffer); });
+		m_Client.SetServerConnectedCallback([this]() { OnServerConnected(); });
+		m_Client.SetServerDisconnectedCallback([this]() { OnServerDisconnected(); });
 	}
 
 	void ClientLayer::OnDetach()
@@ -26,6 +30,9 @@ namespace StarsOfRedemption
 
 	void ClientLayer::OnUpdate(const float deltaTime)
 	{
+		if (m_Client.GetConnectionStatus() != Walnut::Client::ConnectionStatus::Connected)
+			return;
+
 		glm::vec2 dir{ 0.0f, 0.0f };
 
 		if (Walnut::Input::IsKeyDown(Walnut::KeyCode::W))
@@ -53,6 +60,58 @@ namespace StarsOfRedemption
 
 	void ClientLayer::OnUIRender()
 	{
-		DrawRect(m_PlayerPosition, { 50.0f, 50.0f }, 0xffffff);
+
+		if (m_Client.GetConnectionStatus() == Walnut::Client::ConnectionStatus::Connected)
+		{
+			ImGui::Begin("Client");
+			ImGui::Text("Connected to server");
+			ImGui::End();
+
+			DrawRect(m_PlayerPosition, { 50.0f, 50.0f }, 0xffffff);
+		}
+		else
+		{
+			ImGui::Begin("Connect to server");
+
+			ImGui::InputText("Server Address", &m_ServerAddress);
+			if (ImGui::Button("Connect"))
+			{
+				m_Client.ConnectToServer(m_ServerAddress);
+			}
+
+			if (m_Client.GetConnectionStatus() == Walnut::Client::ConnectionStatus::Connecting)
+			{
+				ImGui::TextColored(ImColor(Walnut::UI::Colors::Theme::textDarker), "Connecting to server...");
+			}
+			else if (m_Client.GetConnectionStatus() == Walnut::Client::ConnectionStatus::FailedToConnect)
+			{
+				ImGui::TextColored(ImColor(Walnut::UI::Colors::Theme::error),"Failed to connect to server");
+			}
+			else if (m_Client.GetConnectionStatus() == Walnut::Client::ConnectionStatus::Disconnected)
+			{
+				ImGui::TextColored(ImColor(Walnut::UI::Colors::Theme::error), "Disconnected");
+			}
+
+			ImGui::End();
+		}
+	}
+
+	void ClientLayer::OnDataReceived(const Walnut::Buffer& buffer)
+	{
+		// Handle incoming data from the server
+		// This is where you would parse the data and update the game state accordingly
+		std::cout << "Data received from server: " << buffer << '\n';
+	}
+
+	void ClientLayer::OnServerConnected()
+	{
+		std::cout << "Connected to server\n";
+	}
+
+	void ClientLayer::OnServerDisconnected()
+	{
+		std::cout << "Disconnected from server\n";
+		m_PlayerPosition = { 100, 100 };
+		m_PlayerVelocity = { 0, 0 };
 	}
 }
