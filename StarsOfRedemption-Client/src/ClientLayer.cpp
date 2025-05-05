@@ -3,10 +3,14 @@
 #include "Walnut/ImGui/ImGuiTheme.h"
 #include "imgui.h"
 #include "imgui_internal.h"
+#include "ServerPacket.h"
 #include "misc/cpp/imgui_stdlib.h"
+#include "Walnut/Serialization/BufferStream.h"
 
 namespace StarsOfRedemption
 {
+	static Walnut::Buffer s_MessageBuffer;
+
 	static void DrawRect(const glm::vec2 position, const glm::vec2 size, const uint32_t color)
 	{
 		ImDrawList* drawList = ImGui::GetBackgroundDrawList();
@@ -18,6 +22,8 @@ namespace StarsOfRedemption
 
 	void ClientLayer::OnAttach()
 	{
+		s_MessageBuffer.Allocate(10 * 1024 * 1024);
+
 		m_Client.SetDataReceivedCallback([this](const Walnut::Buffer buffer) { OnDataReceived(buffer); });
 		m_Client.SetServerConnectedCallback([this]() { OnServerConnected(); });
 		m_Client.SetServerDisconnectedCallback([this]() { OnServerDisconnected(); });
@@ -48,14 +54,22 @@ namespace StarsOfRedemption
 		if (glm::length(dir) > 0.0f)
 		{
 			dir = glm::normalize(dir);
-			constexpr float speed = 40.0f;
+			constexpr float speed = 200.0f;
 			m_PlayerVelocity = dir * speed;
 		}
 
+		m_PlayerPosition += m_PlayerVelocity * deltaTime;
+
 		m_PlayerVelocity = glm::mix(m_PlayerVelocity, glm::vec2(0.0f), 5.0f * deltaTime);
 
-		m_PlayerPosition += m_PlayerVelocity * deltaTime;
 		std::cout << "Player Position: (" << m_PlayerPosition.x << ", " << m_PlayerPosition.y << ")\n";
+
+		Walnut::BufferStreamWriter writer(s_MessageBuffer);
+		writer.WriteRaw(PacketType::ClientUpdate);
+		writer.WriteRaw<glm::vec2>(m_PlayerPosition);
+		writer.WriteRaw<glm::vec2>(m_PlayerVelocity);
+
+		m_Client.SendBuffer(writer.GetBuffer());
 	}
 
 	void ClientLayer::OnUIRender()
@@ -67,7 +81,19 @@ namespace StarsOfRedemption
 			ImGui::Text("Connected to server");
 			ImGui::End();
 
-			DrawRect(m_PlayerPosition, { 50.0f, 50.0f }, 0xffffff);
+			DrawRect(m_PlayerPosition, { 50.0f, 50.0f }, 0xffff00ff);
+
+			m_PlayerDataMutex.lock();
+			const std::map<uint32_t, PlayerData> playerData = m_PlayerData;
+			m_PlayerDataMutex.unlock();
+
+			for (auto& [id, data] : playerData)
+			{
+				if (id == m_ClientId)
+					continue;
+
+				DrawRect(data.Position, { 50.0f, 50.0f }, 0xff00ff00);
+			}
 		}
 		else
 		{
@@ -85,7 +111,7 @@ namespace StarsOfRedemption
 			}
 			else if (m_Client.GetConnectionStatus() == Walnut::Client::ConnectionStatus::FailedToConnect)
 			{
-				ImGui::TextColored(ImColor(Walnut::UI::Colors::Theme::error),"Failed to connect to server");
+				ImGui::TextColored(ImColor(Walnut::UI::Colors::Theme::error), "Failed to connect to server");
 			}
 			else if (m_Client.GetConnectionStatus() == Walnut::Client::ConnectionStatus::Disconnected)
 			{
@@ -98,9 +124,33 @@ namespace StarsOfRedemption
 
 	void ClientLayer::OnDataReceived(const Walnut::Buffer& buffer)
 	{
-		// Handle incoming data from the server
-		// This is where you would parse the data and update the game state accordingly
-		std::cout << "Data received from server: " << buffer << '\n';
+		Walnut::BufferStreamReader stream(buffer);
+
+		PacketType packetType;
+		stream.ReadRaw(packetType);
+		switch (packetType)
+		{
+		case PacketType::ClientConnect:
+		{
+			uint32_t clientId;
+			stream.ReadRaw(clientId);
+			m_ClientId = clientId;
+			std::cout << "Client ID: " << m_ClientId << "\n";
+			break;
+		}
+		case PacketType::ClientUpdate:
+		{
+			m_PlayerDataMutex.lock();
+			{
+				stream.ReadMap(m_PlayerData);
+			}
+			m_PlayerDataMutex.unlock();
+
+			break;
+		}
+		default:
+			break;
+		}
 	}
 
 	void ClientLayer::OnServerConnected()

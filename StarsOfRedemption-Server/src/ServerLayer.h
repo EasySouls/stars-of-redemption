@@ -24,9 +24,9 @@ namespace StarsOfRedemption
 	private:
 		static void OnConsoleMessage(std::string_view message);
 
-		static void OnClientConnected(const Walnut::ClientInfo& clientInfo);
-		static void OnClientDisconnected(const Walnut::ClientInfo& clientInfo);
-		static void OnDataReceived(const Walnut::ClientInfo& clientInfo, const Walnut::Buffer buffer);
+		void OnClientConnected(const Walnut::ClientInfo& clientInfo);
+		void OnClientDisconnected(const Walnut::ClientInfo& clientInfo);
+		void OnDataReceived(const Walnut::ClientInfo& clientInfo, Walnut::Buffer buffer);
 	private:
 		HeadlessConsole m_Console;
 		Walnut::Server m_Server{ 8192 };
