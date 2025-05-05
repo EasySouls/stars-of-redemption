@@ -9,7 +9,7 @@ project "StarsOfRedemption-Server"
 
    includedirs
    {
-      "../StarsOfRedemption-Common/Source",
+      "../StarsOfRedemption-Common/src",
 
       "../Walnut/vendor/imgui",
       "../Walnut/vendor/glfw/include",
@@ -44,6 +44,7 @@ project "StarsOfRedemption-Server"
    filter "system:windows"
       systemversion "latest"
       defines { "WL_PLATFORM_WINDOWS" }
+      buildoptions { "/utf-8" }
 
       postbuildcommands 
 	  {

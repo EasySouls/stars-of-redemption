@@ -9,7 +9,7 @@ project "StarsOfRedemption-Client"
 
    includedirs
    {
-      "../StarsOfRedemption-Common/Source",
+      "../StarsOfRedemption-Common/src",
 
       "../Walnut/vendor/imgui",
       "../Walnut/vendor/glfw/include",
