@@ -1,4 +1,6 @@
 #pragma once
+
+#include "Renderer/Renderer.h"
 #include "Walnut/Application.h"
 #include "Walnut/Layer.h"
 #include "Walnut/Networking/Client.h"
@@ -16,6 +18,7 @@ namespace StarsOfRedemption
 		void OnDetach() override;
 
 		void OnUIRender() override;
+		void OnRender() override;
 
 		void OnUpdate(float deltaTime) override;
 
@@ -25,6 +28,8 @@ namespace StarsOfRedemption
 		void OnServerDisconnected();
 
 	private:
+		Renderer m_Renderer;
+
 		glm::vec2 m_PlayerPosition{ 100, 100 };
 		glm::vec2 m_PlayerVelocity{ 0, 0 };
 

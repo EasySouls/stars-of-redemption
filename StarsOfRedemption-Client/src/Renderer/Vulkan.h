@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vulkan/vulkan.h"
+#include <backends/imgui_impl_vulkan.h>
 
 #include <iostream>
 #include <string>
@@ -9,6 +10,11 @@ namespace vkb
 {
 	std::string to_string(VkResult result);
 
+}
+
+namespace StarsOfRedemption
+{
+	ImGui_ImplVulkan_InitInfo* GetVulkanBackendData();
 }
 
 #define VK_CHECK(x) \

@@ -27,6 +27,8 @@ namespace StarsOfRedemption
 		m_Client.SetDataReceivedCallback([this](const Walnut::Buffer buffer) { OnDataReceived(buffer); });
 		m_Client.SetServerConnectedCallback([this]() { OnServerConnected(); });
 		m_Client.SetServerDisconnectedCallback([this]() { OnServerDisconnected(); });
+
+		m_Renderer.Init();
 	}
 
 	void ClientLayer::OnDetach()
@@ -120,6 +122,11 @@ namespace StarsOfRedemption
 
 			ImGui::End();
 		}
+	}
+
+	void ClientLayer::OnRender()
+	{
+		Layer::OnRender();
 	}
 
 	void ClientLayer::OnDataReceived(const Walnut::Buffer& buffer)

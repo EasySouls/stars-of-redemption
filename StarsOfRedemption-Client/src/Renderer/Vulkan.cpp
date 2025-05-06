@@ -1,6 +1,5 @@
 #include "Vulkan.h"
 
-
 namespace vkb
 {
 	std::string to_string(const VkResult result)
@@ -45,5 +44,12 @@ namespace vkb
 			return "UNKNOWN_ERROR";
 		}
 	}
+}
 
+namespace StarsOfRedemption
+{
+	ImGui_ImplVulkan_InitInfo* GetVulkanBackendData()
+	{
+		return ImGui::GetCurrentContext() ? static_cast<ImGui_ImplVulkan_InitInfo*>(ImGui::GetIO().BackendRendererUserData) : nullptr;
+	}
 }
