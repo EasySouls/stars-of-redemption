@@ -156,14 +156,18 @@ IF EXIST "..\Walnut\Walnut-Modules\Walnut-Networking\vendor\GameNetworkingSocket
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Renderer\Renderer.h" />
     <ClInclude Include="src\ClientLayer.h" />
+    <ClInclude Include="src\Renderer\Vulkan.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Renderer\Renderer.cpp" />
     <ClCompile Include="src\ClientLayer.cpp">
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
+    <ClCompile Include="src\Renderer\Vulkan.cpp" />
     <ClCompile Include="src\StarsOfRedemptionApp.cpp">
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
